@@ -14,7 +14,12 @@ func main() {
 		fmt.Print("> ")
 		input, _ := reader.ReadString('\n')
 		input = strings.TrimSpace(input)
-		doStuff(input)
+
+		router := router{handlers: map[string] func([]string){}}
+		router.handlers["GET"] = doGet
+		router.handlers["POST"] = doPost
+		
+		doStuff(router, input)
 	}
 }
 
@@ -22,18 +27,14 @@ type router struct {
 	handlers map[string] func([]string)
 }
 
-func doStuff(line string) {
+func doStuff(routes router, line string) {
 	tokens := strings.Split(line, " ")
 
-	router := router{handlers: map[string] func([]string){}}
-	router.handlers["GET"] = doGet
-	router.handlers["POST"] = doPost
-	
 	switch tokens[0] {
 	case "GET":
-		router.handlers["GET"](tokens[1:])
+		routes.handlers["GET"](tokens[1:])
 	case "POST":
-		router.handlers["POST"](tokens[1:])
+		routes.handlers["POST"](tokens[1:])
 	default:
 		fmt.Printf("unknown command\n")
 	}
