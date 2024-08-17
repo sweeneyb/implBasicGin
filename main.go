@@ -7,6 +7,16 @@ import (
 	"strings"
 )
 
+// These are our handler functions.
+func doGet(what []string) {
+	fmt.Printf("GET: %v\n", what)
+}
+
+func doPost(what []string) {
+	fmt.Printf("POST: %v\n", what)
+}
+
+// This is the "main" where we configure our framework to handle the CLI commands
 func main() {
 	reader := bufio.NewReader(os.Stdin)
 
@@ -15,6 +25,7 @@ func main() {
 		input, _ := reader.ReadString('\n')
 		input = strings.TrimSpace(input)
 
+		// the router is what directs the get/post to the handlers
 		router := router{handlers: map[string] func([]string){}}
 		router.handlers["GET"] = doGet
 		router.handlers["POST"] = doPost
@@ -23,6 +34,7 @@ func main() {
 	}
 }
 
+// Everything below is the "framework" 
 type router struct {
 	handlers map[string] func([]string)
 }
@@ -38,12 +50,4 @@ func doStuff(routes router, line string) {
 	default:
 		fmt.Printf("unknown command\n")
 	}
-}
-
-func doGet(what []string) {
-	fmt.Printf("GET: %v\n", what)
-}
-
-func doPost(what []string) {
-	fmt.Printf("POST: %v\n", what)
 }
