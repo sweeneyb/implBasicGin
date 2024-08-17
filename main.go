@@ -14,15 +14,18 @@ func main() {
 		fmt.Print("> ")
 		input, _ := reader.ReadString('\n')
 		input = strings.TrimSpace(input)
+		doStuff(input)
+	}
+}
 
-		tokens := strings.Split(input, " ")
-		switch tokens[0] {
-		case "GET":
-			fmt.Printf("GET: %v\n", tokens[1:])
-		case "POST":
-			fmt.Printf("POST: %v\n", tokens[1:])
-		default:
-			fmt.Printf("unknown command\n")
-		}
+func doStuff(line string) {
+	tokens := strings.Split(line, " ")
+	switch tokens[0] {
+	case "GET":
+		fmt.Printf("GET: %v\n", tokens[1:])
+	case "POST":
+		fmt.Printf("GET: %v\n", tokens[1:])
+	default:
+		fmt.Printf("unknown command\n")
 	}
 }
