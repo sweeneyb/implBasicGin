@@ -31,6 +31,7 @@ func main() {
 	gin.SetMode(gin.ReleaseMode)
 	ginRouter := gin.Default()
 	ginRouter.GET("/", doGet)
+	ginRouter.POST("/", doPost)
 	
 	go func() { ginRouter.Run("localhost:8080") }()
 	for {
@@ -40,7 +41,16 @@ func main() {
 		doStuff(router, input)
 	}
 }
+
 // Everything below is the "framework" 
+func doStuff(routes router, line string) {
+	tokens := strings.Split(line, " ")
+	if len(tokens) < 2 {
+		fmt.Printf("error: please provide at least 2 tokens on the CLI.\n")
+		return
+	}
+	routes.deferRequest(tokens[0], tokens[1:])
+}
 
 func (r router) deferRequest(method string, path []string) {
 	// gin will have an internal way of constructing this.
@@ -62,10 +72,6 @@ func (r router) deferRequest(method string, path []string) {
 
 type router struct {
 	handlers map[string] map[string] func(*gin.Context)
-}
-
-type Request struct {
-	method string
 }
 
 // A couple of functions to impersonate the http writer
@@ -102,14 +108,4 @@ func (r router) configurePOST(path string, f func(*gin.Context)) {
 		r.handlers["POST"] = handler
 	}
 	r.handlers["POST"][path] = f
-}
-
-func doStuff(routes router, line string) {
-	tokens := strings.Split(line, " ")
-	if len(tokens) < 2 {
-		fmt.Printf("error: please provide at least 2 tokens on the CLI.\n")
-		return
-	}
-	routes.deferRequest(tokens[0], tokens[1:])
-
 }
