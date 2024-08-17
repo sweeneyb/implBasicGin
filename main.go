@@ -18,18 +18,22 @@ func main() {
 	}
 }
 
+type router struct {
+	handlers map[string] func([]string)
+}
+
 func doStuff(line string) {
 	tokens := strings.Split(line, " ")
 
-	handlers := map[string] func([]string) {
-		"GET": doGet,
-		"POST": doPost,
-	}
+	router := router{handlers: map[string] func([]string){}}
+	router.handlers["GET"] = doGet
+	router.handlers["POST"] = doPost
+	
 	switch tokens[0] {
 	case "GET":
-		handlers["GET"](tokens[1:])
+		router.handlers["GET"](tokens[1:])
 	case "POST":
-		handlers["POST"](tokens[1:])
+		router.handlers["POST"](tokens[1:])
 	default:
 		fmt.Printf("unknown command\n")
 	}
