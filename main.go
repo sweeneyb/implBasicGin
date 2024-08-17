@@ -79,15 +79,15 @@ type CLIResponseWriter struct {
 
 }
 
-func (w CLIResponseWriter) Header() http.Header {
+func (CLIResponseWriter) Header() http.Header {
 	return map[string][]string{}
 }
-func (w CLIResponseWriter) Write(b []byte) (int, error)  {
+func (CLIResponseWriter) Write(b []byte) (int, error)  {
 	written, error := os.Stdout.Write(b)
 	// fmt.Println("Write")
 	return written, error
 }
-func (w CLIResponseWriter) WriteHeader(statusCode int) {
+func (CLIResponseWriter) WriteHeader(statusCode int) {
 	fmt.Printf("WriteHeader: %v\n ",statusCode)
 }
 
