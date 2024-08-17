@@ -27,8 +27,8 @@ func main() {
 
 		// the router is what directs the get/post to the handlers
 		router := router{handlers: map[string] func([]string){}}
-		router.handlers["GET"] = doGet
-		router.handlers["POST"] = doPost
+		router.configureGET(doGet)
+		router.configurePOST(doPost)
 		
 		doStuff(router, input)
 	}
@@ -37,6 +37,14 @@ func main() {
 // Everything below is the "framework" 
 type router struct {
 	handlers map[string] func([]string)
+}
+
+func (r router) configureGET(f func([]string)) {
+	r.handlers["GET"] = f
+}
+
+func (r router) configurePOST(f func([]string)) {
+	r.handlers["POST"] = f
 }
 
 func doStuff(routes router, line string) {
