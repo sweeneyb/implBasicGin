@@ -20,11 +20,16 @@ func main() {
 
 func doStuff(line string) {
 	tokens := strings.Split(line, " ")
+
+	handlers := map[string] func([]string) {
+		"GET": doGet,
+		"POST": doPost,
+	}
 	switch tokens[0] {
 	case "GET":
-		doGet(tokens[1:])
+		handlers["GET"](tokens[1:])
 	case "POST":
-		doPost(tokens[1:])
+		handlers["POST"](tokens[1:])
 	default:
 		fmt.Printf("unknown command\n")
 	}
