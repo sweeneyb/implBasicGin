@@ -19,8 +19,8 @@ func main() {
 		switch tokens[0] {
 		case "GET":
 			fmt.Printf("GET: %v\n", tokens[1:])
-		case "GET":
-			fmt.Printf("GET: %v\n", tokens[1:])
+		case "POST":
+			fmt.Printf("POST: %v\n", tokens[1:])
 		default:
 			fmt.Printf("unknown command\n")
 		}
