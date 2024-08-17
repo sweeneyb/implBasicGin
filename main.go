@@ -26,36 +26,54 @@ func main() {
 		input = strings.TrimSpace(input)
 
 		// the router is what directs the get/post to the handlers
-		router := router{handlers: map[string] func([]string){}}
-		router.configureGET(doGet)
-		router.configurePOST(doPost)
+		router := router{handlers: map[string] map[string] func([]string){}}
+		router.configureGET( "/", doGet)
+		router.configurePOST("/", doPost)
 		
 		doStuff(router, input)
 	}
 }
 
+func (r router) deferRequest(method string, path []string) {
+	paths, ok := r.handlers[method]
+	if !ok {
+		fmt.Println("unknown method")
+		return
+	}
+	handler, ok := paths[path[0]]
+	if !ok {
+		fmt.Println("404 - Path not found.")
+		return
+	}
+	handler(path)
+
+}
+
 // Everything below is the "framework" 
 type router struct {
-	handlers map[string] func([]string)
+	handlers map[string] map[string] func([]string)
 }
 
-func (r router) configureGET(f func([]string)) {
-	r.handlers["GET"] = f
+func (r router) configureGET(path string, f func([]string)) {
+	handler, ok := r.handlers["GET"]
+	if !ok {
+		handler = map[string] func([]string){}
+		r.handlers["GET"] = handler
+	}
+	r.handlers["GET"][path] = f
 }
 
-func (r router) configurePOST(f func([]string)) {
-	r.handlers["POST"] = f
+func (r router) configurePOST(path string, f func([]string)) {
+	handler, ok := r.handlers["POST"]
+	if !ok {
+		handler = map[string] func([]string){}
+		r.handlers["POST"] = handler
+	}
+	r.handlers["POST"][path] = f
 }
 
 func doStuff(routes router, line string) {
 	tokens := strings.Split(line, " ")
+	routes.deferRequest(tokens[0], tokens[1:])
 
-	switch tokens[0] {
-	case "GET":
-		routes.handlers["GET"](tokens[1:])
-	case "POST":
-		routes.handlers["POST"](tokens[1:])
-	default:
-		fmt.Printf("unknown command\n")
-	}
 }
