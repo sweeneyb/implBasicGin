@@ -22,10 +22,18 @@ func doStuff(line string) {
 	tokens := strings.Split(line, " ")
 	switch tokens[0] {
 	case "GET":
-		fmt.Printf("GET: %v\n", tokens[1:])
+		doGet(tokens[1:])
 	case "POST":
-		fmt.Printf("GET: %v\n", tokens[1:])
+		doPost(tokens[1:])
 	default:
 		fmt.Printf("unknown command\n")
 	}
+}
+
+func doGet(what []string) {
+	fmt.Printf("GET: %v\n", what)
+}
+
+func doPost(what []string) {
+	fmt.Printf("POST: %v\n", what)
 }
